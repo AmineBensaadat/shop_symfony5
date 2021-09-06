@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AccountPasswordController!{% endblock %}
+
+{% block content %}
+<h1> my account </h1>
+
+<h3>Hi {{ app.user.firstname }}</h3>
+<div class="p-3 mb-2 bg-danger text-white"><a href="{{ path('account_password_update') }}"> Change Passord</div>
+<div class="p-3 mb-2 bg-secondary text-white">.bg-secondary</div>
+<div class="p-3 mb-2 bg-success text-white">.bg-success</div>
+
+{% endblock %}
