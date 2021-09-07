@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ product.name}} {% endblock %}
+
+{% block content %}
+<h1> {{ product.name}} </h1>
+    <div class="row">
+        <div class="col-md-5">
+                <img src="/uploads/{{ product.illustration }}" alt="{{ product.illustration }}" class="img-fluid" >
+        </div>
+        <div class="col-md-7">
+            <div class="product-item text-center">
+                <h5> {{ product.name }}</h5>
+                <p> {{ product.subtitle }} </p>
+                <span class="product-page-price">{{ (product.price / 100)  | number_format(2, ',','.') }} MAD</span>
+                <hr>
+                <p>
+                    {{  product.description}}
+                </p>
+            </div>
+            <a href="" class="btn btn-primary"> Add to card</a>
+        </div>
+    </div>
+
+{% endblock %}
