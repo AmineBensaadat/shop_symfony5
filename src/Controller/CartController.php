@@ -5,16 +5,34 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Classes\Cart;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Products;
 
 class CartController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/my-cart", name="cart")
      */
     public function index(Cart $cart)
     {
-        dd($cart->get());
-        return $this->render('cart/index.html.twig');
+        $compalteCarte = [];
+        foreach ($cart->get() as $id => $quantity) {
+            $compalteCarte[] = [
+                'product' => $this->entityManager->getRepository(Products::class)->findOneById($id),
+                'quantity' => $quantity
+            ];
+        }
+
+        return $this->render('cart/index.html.twig', [
+            'cart' => $compalteCarte
+        ]);
     }
 
      /**
