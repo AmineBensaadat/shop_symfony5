@@ -18,7 +18,7 @@
                     {{  product.description}}
                 </p>
             </div>
-            <a href="" class="btn btn-primary"> Add to card</a>
+            <a href="{{ path('add_to_cart', { 'id' : product.id }) }}" class="btn btn-primary"> Add to card</a>
         </div>
     </div>
 
