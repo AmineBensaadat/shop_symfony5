@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello My address{% endblock %}
+
+{% block content %}
+<h1> my account </h1>
+<a href="{{ path('account_address_add') }}" class="btn btn-info btn-sm float-right"> add Address</a>
+<h3>My addresses</h3>
+{% if app.user.addresses|length  == 0 %}
+you have no address you can add new address <a href=""> her </a> 
+{% else %}
+<div class="row">
+    {% for address in app.user.addresses %}
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ address.name }}</h5>
+                    <p class="card-text">
+                        {{ address.address }}
+                        {{ address.postal }} - {{ address.city }} - {{ address.country }}
+                    </p>
+                    <a href="{{ path('account_address_edit', { 'id' : address.id}) }}">update</a> | <a href="#">delete</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+    
+{% endif %}
+
+<p><a href="{{ path('account') }}"> Return </a></p>
+
+{% endblock %}
