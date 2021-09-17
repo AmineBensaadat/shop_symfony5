@@ -47,7 +47,7 @@ class AccountAddressController extends AbstractController
             // rederct to root
             return $this->redirectToRoute('account_address');
         }
-        return $this->render('account/address_add.html.twig', [
+        return $this->render('account/address_form.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -64,9 +64,6 @@ class AccountAddressController extends AbstractController
         $form = $this->createForm(AddressType::class, $address);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $address->setUser($this->getUser());
-            // passe entity to doctrine
-            $this->entityManager->persist($address);
 
             // set data into table
             $this->entityManager->flush();
@@ -74,8 +71,24 @@ class AccountAddressController extends AbstractController
             // rederct to root
             return $this->redirectToRoute('account_address');
         }
-        return $this->render('account/address_add.html.twig', [
+        return $this->render('account/address_form.html.twig', [
             'form' => $form->createView()
         ]);
     }
+
+    
+     /**
+     * @Route("/account/addresses/delete/{id}", name="account_address_delete")
+     */
+        public function delete(Request $request, $id)
+        {
+            $address = $this->entityManager->getRepository(Address::class)->findOneById($id);
+            if($address && $address->getUser() == $this->getUser()){
+                // set data into table
+                $this->entityManager->remove($address);
+                $this->entityManager->flush();
+            }
+            // rederct to root
+            return $this->redirectToRoute('account_address');
+        }
 }

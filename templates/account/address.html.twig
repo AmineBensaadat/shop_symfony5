@@ -19,7 +19,7 @@ you have no address you can add new address <a href=""> her </a>
                         {{ address.address }}
                         {{ address.postal }} - {{ address.city }} - {{ address.country }}
                     </p>
-                    <a href="{{ path('account_address_edit', { 'id' : address.id}) }}">update</a> | <a href="#">delete</a>
+                    <a href="{{ path('account_address_edit', { 'id' : address.id}) }}">update</a> | <a href="{{ path('account_address_delete', { 'id' : address.id}) }}">delete</a>
                 </div>
             </div>
         </div>
