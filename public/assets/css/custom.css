@@ -40,3 +40,17 @@ body {
     max-width: 600px;
     margin: auto;
 }
+.form-check{
+    background-color: #d0e1fd;
+    padding: 20px 65px;
+    margin-top: 7px;
+}
+
+.col-form-check{
+    font-weight: bold;
+}
+
+.order-sumary{
+    background-color: #d0e1fd;
+    padding: 20px 10px;
+}

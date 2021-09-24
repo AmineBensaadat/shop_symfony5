@@ -20,7 +20,7 @@ class OrderDetails
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="product")
      */
-    private $orderId;
+    private $order;
 
     /**
      * @ORM\Column(type="integer")
