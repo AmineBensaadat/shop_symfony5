@@ -7,17 +7,37 @@
 <p> chose your carrier </p>
 <div class="row">
     <div class="col-md-6">
-        <b>Choisire mon addresse de livraison</b>
         {% set formHtml %}
-        {{ form(form) }}
+            {{ form_start(form, {action:path("order_recap")}) }}
+                {{ form_label(form.addresses, 'choisisez l\'address de livraison') }}
+                <a href="{{ path('account_address_add') }}" > Ajouter une nouvelle address</a>
+            {{ form_end(form) }}
         {% endset %}
 
         {{ formHtml|replace({'[br]' : '<br/>'})|raw }}
         <b>Choisire mon Transporteur</b>
     </div>
     <div class="col-md-6">
-         <b>Récap order</b>
-        <b>payed button</b>
+        <div class="text-center">
+            <b> Recap Order </b>
+            <p> find recap of all products <p>
+        </div>
+        <div class="order-sumary">
+            {% for product in cart %}
+            <div class="row {% if product > 0 %}mt-2{% endif %}">
+                <div class="col-2">
+                    <img src="/uploads/{{ product.product.illustration }}" alt="{{ product.product.illustration }}" height="50px">
+                </div>
+                <div class="col-8">
+                    {{product.product.name }}<br/>
+                    <small>{{ product.product.subtitle }}</small>
+                </div>
+                <div class="col-2">
+                    X {{ product.quantity }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

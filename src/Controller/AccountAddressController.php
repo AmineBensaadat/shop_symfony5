@@ -30,7 +30,7 @@ class AccountAddressController extends AbstractController
     }
 
      /**
-     * @Route("/account/addresses/add", name="")
+     * @Route("/account/addresses/add", name="account_address_add")
      */
     public function add(Cart $cart , Request $request): Response
     {
