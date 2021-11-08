@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderDetailsRepository;
+use App\Repository\OrderProductsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OrderDetailsRepository::class)
+ * @ORM\Entity(repositoryClass=OrderProductsRepository::class)
  */
-class OrderDetails
+class OrderProducts
 {
     /**
      * @ORM\Id
@@ -18,14 +18,20 @@ class OrderDetails
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderProducts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $productOrder;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $product;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $quantity;
-
-        /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $productName;
 
     /**
      * @ORM\Column(type="float")
@@ -37,26 +43,32 @@ class OrderDetails
      */
     private $total;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderDetails")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $order;
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getOrder(): ?Order
+    public function getProductOrder(): ?Order
     {
-        return $this->order;
+        return $this->productOrder;
     }
 
-    public function setOrder($order): self
+    public function setProductOrder(?Order $productOrder): self
     {
-        
-        $this->order = $order;
+        $this->productOrder = $productOrder;
+
+        return $this;
+    }
+
+    public function getProduct(): ?string
+    {
+        return $this->product;
+    }
+
+    public function setProduct(string $product): self
+    {
+        $this->product = $product;
+
         return $this;
     }
 
@@ -92,18 +104,6 @@ class OrderDetails
     public function setTotal(float $total): self
     {
         $this->total = $total;
-
-        return $this;
-    }
-
-    public function getProductName(): ?string
-    {
-        return $this->productName;
-    }
-
-    public function setProductName(string $productName): self
-    {
-        $this->productName = $productName;
 
         return $this;
     }

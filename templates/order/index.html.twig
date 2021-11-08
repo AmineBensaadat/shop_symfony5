@@ -7,9 +7,11 @@
 <p> chose your carrier </p>
 <div class="row">
     <div class="col-md-6">
-        <b>Choisire mon addresse de livraison</b>
         {% set formHtml %}
-        {{ form(form) }}
+            {{ form_start(form, {action:path("order_recap")}) }}
+                {{ form_label(form.addresses, 'choisisez l\'address de livraison') }}
+                <a href="{{ path('account_address_add') }}" > Ajouter une nouvelle address</a>
+            {{ form_end(form) }}
         {% endset %}
 
         {{ formHtml|replace({'[br]' : '<br/>'})|raw }}

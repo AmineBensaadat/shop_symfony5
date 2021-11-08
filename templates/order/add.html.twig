@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vlidate my oder{% endblock %}
+
+{% block content %}
+<h1> vlidate befor validate my order </h2>
+<div class="row">
+    <div class="col-md-6">
+       <b>mon addresse de livraison </b></br>
+        <div class="form-check mt-5" >
+                {{ delivery|raw }}
+        </div>
+       <hr>
+       <b> mon transporteur  </b>
+       <div class="form-check" >
+            {{ carrier.price }} <br/>
+            {{ carrier.price  | number_format(2, ',','.')}}
+       </div>
+    </div>
+    <div class="col-md-6">
+        <div class="text-center">
+            <b> my Order </b>
+        </div>
+        <div class="order-sumary">
+            {% set total = null %}
+            {% for product in cart %}
+            <div class="row {% if product > 0 %}mt-2{% endif %}">
+                <div class="col-2">
+                    <img src="/uploads/{{ product.product.illustration }}" alt="{{ product.product.illustration }}" height="50px">
+                </div>
+                <div class="col-8">
+                    {{product.product.name }}<br/>
+                    <small>{{ product.product.subtitle }}</small>
+                    <br>
+                      X {{ product.quantity }}
+                </div>
+                <div class="col-2">
+                   {{ ((product.product.price * product.quantity)  / 100)  | number_format(2, ',','.') }} MAD
+                </div>
+            </div>
+                {% set total = total +  (product.product.price * product.quantity) %}
+            {% endfor %}
+        </div>
+
+        <hr>
+        <strong> Sous-Total :  </strong> {{ ((total)  / 100)  | number_format(2, ',','.') }} Dh<br/>
+        <strong> Livraison :  </strong> {{ carrier.price  | number_format(2, ',','.') }} DH
+        <hr>
+        <strong> Total :  </strong> {{ (((total)  / 100) + carrier.price)  | number_format(2, ',','.') }} DH
+        <br />
+        <a href="" class="btn btn-success btn-block mt-3" > Payer | {{ (((total)  / 100) + carrier.price)  | number_format(2, ',','.') }} DH </a>
+    </div>
+</div>
+{% endblock %}
