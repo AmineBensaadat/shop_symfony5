@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\OrderType;
 use App\Classes\Cart;
+use App\Classes\Mail;
 use App\Entity\Order;
 use App\Entity\OrderProducts;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +42,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order/recap", name="order_recap", methods={"POST"})
+     * @Route("/order/recap", name="order_recap")
      */
     public function add(Cart $cart, Request $request): Response
     {
@@ -88,9 +89,13 @@ class OrderController extends AbstractController
                     // passe entity to doctrine
                     $this->entityManager->persist($orderProducts);
                 }
-
                 // set data into table
                 $this->entityManager->flush();
+
+                // send email to customer
+                $mail = new Mail();
+                $content = "your order hase ben save";
+                $mail->send($order->getUser()->getEmail(), $order->getUser()->getLastname(), 'order', $order->getUser()->getFullName(), $content);
 
                 return $this->render('order/add.html.twig',[
                     'cart' => $cart->getFull(),

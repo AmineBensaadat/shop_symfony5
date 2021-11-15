@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Classes\Mail;
 use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManager;
@@ -27,6 +28,8 @@ class RegisterController extends AbstractController
      */
     public function index(Request $request, UserPasswordEncoderInterface $encoder)
     {
+
+        $notification = null;
         // create object from entity User
         $user = new User();
 
@@ -42,20 +45,35 @@ class RegisterController extends AbstractController
             //get data from the from
             $user = $form->getData();
 
-                // hash Password
-                $password = $user->getPassword();
+            // check if user aradey exist in the database
+                $search_email = $this->entityManager->getRepository(User::class)->findOneByEmail($user->getEmail());
 
-                $encoded = $encoder->encodePassword($user, $password);
-                $user->setPassword($encoded);
+                if(!$search_email){
+                    // hash Password
+                    $password = $user->getPassword();
 
-            // passe entity to doctrine
-            $this->entityManager->persist($user);
+                    $encoded = $encoder->encodePassword($user, $password);
+                    $user->setPassword($encoded);
 
-            // set data into table
-            $this->entityManager->flush();
+                    // passe entity to doctrine
+                    $this->entityManager->persist($user);
+
+                    // set data into table
+                    $this->entityManager->flush();
+
+                    // send email to customer
+                    $mail = new Mail();
+                    $content = "merci pour votre inscription";
+                    $mail->send($user->getEmail(), $user->getFullName(), 'inscription', $user->getFullName(), $content);
+                 
+                    $notification = " Votre inscription c'est correctement dérouler ";
+                } else {
+                    $notification = " l'email aradeay exist ";
+                }
         }
         return $this->render('register/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'notification' => $notification
         ]);
     }
 }
