@@ -41,11 +41,6 @@ class Order
     private $delivery;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orderId")
-     */
-    private $product;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isPaid;
@@ -55,13 +50,10 @@ class Order
      */
     private $user;
 
-    /**
-     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orderId")
-     */
-    private $orderDetails;
+
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderProducts::class, mappedBy="orderId")
+     * @ORM\OneToMany(targetEntity=OrderProducts::class, mappedBy="productOrder")
      */
     private $orderProducts;
 
@@ -70,6 +62,14 @@ class Order
         $this->product = new ArrayCollection();
         $this->orderDetails = new ArrayCollection();
         $this->orderProducts = new ArrayCollection();
+    }
+    
+    public function getTotal(){
+        $total = null;
+        foreach ($this->getOrderProducts()->getValues() as $product) {
+            $total += $product->getPrice() * $product->getQuantity();
+        }
+        return $total;
     }
 
     public function getId(): ?int
@@ -82,7 +82,7 @@ class Order
         return $this->carrierName;
     }
 
-    public function getCretedAt()
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
@@ -136,27 +136,9 @@ class Order
         return $this->product;
     }
 
-    public function addProduct(OrderDetails $product): self
-    {
-        if (!$this->product->contains($product)) {
-            $this->product[] = $product;
-            $product->setOrderId($this);
-        }
 
-        return $this;
-    }
 
-    public function removeProduct(OrderDetails $product): self
-    {
-        if ($this->product->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getOrderId() === $this) {
-                $product->setOrderId(null);
-            }
-        }
 
-        return $this;
-    }
 
     public function getIsPaid(): ?bool
     {
@@ -190,27 +172,8 @@ class Order
         return $this->orderDetails;
     }
 
-    public function addOrderDetail(OrderDetails $orderDetail): self
-    {
-        if (!$this->orderDetails->contains($orderDetail)) {
-            $this->orderDetails[] = $orderDetail;
-            $orderDetail->setOrderId($this);
-        }
 
-        return $this;
-    }
 
-    public function removeOrderDetail(OrderDetails $orderDetail): self
-    {
-        if ($this->orderDetails->removeElement($orderDetail)) {
-            // set the owning side to null (unless already changed)
-            if ($orderDetail->getOrderId() === $this) {
-                $orderDetail->setOrderId(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|OrderProducts[]
@@ -224,7 +187,7 @@ class Order
     {
         if (!$this->orderProducts->contains($orderProduct)) {
             $this->orderProducts[] = $orderProduct;
-            $orderProduct->setOrderId($this);
+            $orderProduct->setProductOrder($this);
         }
 
         return $this;
@@ -234,8 +197,8 @@ class Order
     {
         if ($this->orderProducts->removeElement($orderProduct)) {
             // set the owning side to null (unless already changed)
-            if ($orderProduct->getOrderId() === $this) {
-                $orderProduct->setOrderId(null);
+            if ($orderProduct->getProductOrder() === $this) {
+                $orderProduct->setProductOrder(null);
             }
         }
 

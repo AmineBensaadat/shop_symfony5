@@ -90,6 +90,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getFullName(): string
+    {
+        return (string) $this->firstname. ' '. $this->lastname;
+    }
+
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
